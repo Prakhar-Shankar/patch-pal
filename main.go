@@ -14,6 +14,8 @@ package main
 	router.POST("/bugs", controllers.CreateBug)
 	router.GET("/bugs", controllers.FindBugs)
 	router.GET("/bugs/:id", controllers.FindBug)
+	router.PATCH("/bugs/:id", controllers.UpdateBug)
+	router.DELETE("/bugs/:id", controllers.DeleteBug)
 
 	router.Run()
  }

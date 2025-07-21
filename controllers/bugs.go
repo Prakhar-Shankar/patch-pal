@@ -7,11 +7,11 @@ import (
 )
 
 type CreateBugInput struct{
-	Title string `json:"title" binding:"required"`
-	Description string `json:"description" binding:"required"`
-	Severity string `json:"severity" binding:"required"`
-	Status string `json:"status" binding:"required"`
-	Assignee string `json:"assignee" binding:"required"`
+	Title string `json:"title"`
+	Description string `json:"description"`
+	Severity string `json:"severity"`
+	Status string `json:"status"`
+	Assignee string `json:"assignee"`
 }
 
 func CreateBug(c *gin.Context){
@@ -41,4 +41,42 @@ func FindBug(c *gin.Context){
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": bug})
+}
+
+type UpdateBugInput struct{
+	Title string `json:"title"`
+	Description string `json:"description"`
+	Severity string `json:"severity"`
+	Status string `json:"status"`
+	Assignee string `json:"assignee"`
+}
+
+func UpdateBug(c *gin.Context){
+	var bug models.Bug
+	if err:= models.DB.Where("id = ?", c.Param("id")).First(&bug).Error; err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found"})
+		return
+	}
+	var input UpdateBugInput
+	if err := c.ShouldBindJSON(&input); err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	models.DB.Model(&bug).Updates(input)
+
+	c.JSON(http.StatusOK, gin.H{"data":bug})
+}
+
+func DeleteBug(c *gin.Context){
+	var bug models.Bug
+
+	if err := models.DB.Where("id =?", c.Param("id")).First(&bug).Error; err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bug not found"})
+		return
+	}
+
+	models.DB.Delete(&bug)
+
+	c.JSON(http.StatusOK, gin.H{"data": "Bug delete successfully!"})
 }
