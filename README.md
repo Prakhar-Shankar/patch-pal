@@ -37,3 +37,34 @@ Install Dependencies
 
 Run the server
 `go run main.go`
+
+---
+
+Create a bug
+`curl -X POST http://localhost:8080/bugs \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Login error", "description": "Button not working", "status": "open"}'
+`
+
+
+Get all bugs
+`curl http://localhost:8080/bugs
+`
+
+
+
+Get bug by ID
+`curl http://localhost:8080/bugs/1
+`
+
+Update a bug 
+`curl -X PATCH http://localhost:8080/bugs/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Login issue updated", "status": "resolved"}'
+`
+
+
+
+Delete a bug 
+`curl -X DELETE http://localhost:8080/bugs/1
+`
